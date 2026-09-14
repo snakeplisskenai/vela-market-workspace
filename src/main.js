@@ -1,11 +1,13 @@
 import { VelaWorkspace } from '@luxalgo/vela/workspace';
 import { BinanceProvider } from '@luxalgo/vela/providers/binance';
+import { createMarketStudies } from './market-studies.js';
 import './styles.css';
 
 const status = document.querySelector('#status');
 const symbol = document.querySelector('#symbol');
 const timeframe = document.querySelector('#timeframe');
 const chartRoot = document.querySelector('#chart');
+const studies = createMarketStudies({ root: document.querySelector('#studies'), getSymbol: () => symbol.value, getTimeframe: () => timeframe.value });
 let chart;
 
 function setStatus(text, state) {
@@ -15,6 +17,7 @@ function setStatus(text, state) {
 
 async function mountChart() {
   chart?.destroy?.();
+  studies.refresh();
   chartRoot.replaceChildren();
   setStatus('Connecting to Binance…', 'loading');
   try {
@@ -42,3 +45,4 @@ symbol.addEventListener('change', mountChart);
 timeframe.addEventListener('change', mountChart);
 document.querySelector('#reload').addEventListener('click', mountChart);
 mountChart();
+
