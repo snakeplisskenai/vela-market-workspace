@@ -28,7 +28,7 @@
         <div class="status" id="status" data-state="offline">Starting…</div>
       </header>
       <section class="toolbar" aria-label="Chart controls">
-        <label>Symbol <select id="symbol"><option value="BTCUSDT">BTC / USDT</option><option value="SUIUSDT">SUI / USDT</option><option value="PEPEUSDT">PEPE / USDT</option><option value="BONKUSDT">BONK / USDT</option><option value="ETHUSDT">ETH / USDT</option><option value="SOLUSDT">SOL / USDT</option></select></label>
+        <label>Symbol <select id="symbol"><option value="BTCUSDT.P">BTC / USDT Perp</option><option value="SUIUSDT.P">SUI / USDT Perp</option><option value="PEPEUSDT">PEPE / USDT Spot</option><option value="BONKUSDT">BONK / USDT Spot</option><option value="ETHUSDT.P">ETH / USDT Perp</option><option value="SOLUSDT.P">SOL / USDT Perp</option></select></label>
         <label>Timeframe <select id="timeframe"><option value="1">1m</option><option value="5">5m</option><option value="15" selected>15m</option><option value="60">1h</option><option value="240">4h</option></select></label>
         <button id="reload" type="button">Reload chart</button>
       </section>
@@ -42,8 +42,14 @@
           <button type="button" class="study-toggle active" data-study-toggle="cvd" aria-pressed="true">CVD</button>
           <button type="button" class="study-toggle active" data-study-toggle="vwap" aria-pressed="true">Adaptive VWAP</button>
           <button type="button" class="study-toggle active" data-study-toggle="heatmap" aria-pressed="true">Liquidity heat map</button>
+          <button type="button" class="study-toggle active" data-study-toggle="aggressor" aria-pressed="true">Aggressor ratio</button>
+          <button type="button" class="study-toggle active" data-study-toggle="sessions" aria-pressed="true">Market sessions</button>
         </div>
         <div class="studies-grid" data-studies-grid></div>
+      </section>
+      <section class="catalog-shell" aria-label="Vela indicator catalog">
+        <div><p class="eyebrow">NATIVE CATALOG</p><strong>Vela built-in indicators</strong><span data-native-catalog>Loading the installed Vela study catalog…</span></div>
+        <span>Use the chart’s Indicators button to add, configure, hide, and persist native studies.</span>
       </section>
       <section id="chart" class="chart" aria-label="Interactive financial chart"></section>
       <footer>
