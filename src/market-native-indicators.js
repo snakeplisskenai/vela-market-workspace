@@ -97,7 +97,7 @@ function adaptiveVwapOutput(bars, inputs) {
 
 registerNativeIndicator({
   type: 'adaptive-ml-vwap',
-  title: 'Adaptive ML VWAP (native)',
+  title: 'Adaptive VWAP (native)',
   shortTitle: 'Adaptive VWAP',
   paneHint: 'price',
   overlay: true,
@@ -270,3 +270,4 @@ registerNativeIndicator({
 });
 
 export const MARKET_INDICATOR_IDS = ['adaptive-ml-vwap', 'pvsra-volume-suite', 'cvd-candles-live'];
+
