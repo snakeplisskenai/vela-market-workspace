@@ -43,3 +43,12 @@ test('Vela-native market structure overlay uses chart coordinates and live paylo
   assert.match(overlay, /aggTrade/);
 });
 
+test('TradingView-inspired studies are registered as removable Vela natives', async () => {
+  const source = await readFile(new URL('../src/market-native-indicators.js', import.meta.url), 'utf8');
+  for (const type of ['adaptive-ml-vwap', 'pvsra-volume-suite', 'cvd-candles-live']) {
+    assert.match(source, new RegExp(`type: '${type}'`));
+  }
+  assert.match(source, /registerNativeIndicator/);
+  assert.match(source, /aggTrade/);
+  assert.match(source, /paneHint: 'new'/);
+});
