@@ -1,6 +1,7 @@
 import { VelaWorkspace } from '@luxalgo/vela/workspace';
 import { BinanceProvider } from '@luxalgo/vela/providers/binance';
 import { createMarketStudies } from './market-studies.js';
+import { MARKET_OVERLAY_ID } from './market-overlays.js';
 import './styles.css';
 
 const status = document.querySelector('#status');
@@ -18,7 +19,6 @@ function setStatus(text, state) {
 
 async function mountChart() {
   chart?.destroy?.();
-  studies.refresh();
   chartRoot.replaceChildren();
   setStatus('Connecting to Binance…', 'loading');
   try {
@@ -34,10 +34,12 @@ async function mountChart() {
       persist: false,
     });
     await chart.ready?.();
+    chart.chart?.addNativeIndicator?.(MARKET_OVERLAY_ID);
     const catalog = await chart.chart?.availableNativeIndicators?.();
     if (nativeCatalog && Array.isArray(catalog)) {
       nativeCatalog.textContent = `${catalog.length} built-in Vela studies available from the chart’s Indicators menu.`;
     }
+    studies.refresh();
     setStatus('Live market data', 'online');
   } catch (error) {
     console.error(error);
