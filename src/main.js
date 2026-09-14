@@ -2,6 +2,7 @@ import { VelaWorkspace } from '@luxalgo/vela/workspace';
 import { BinanceProvider } from '@luxalgo/vela/providers/binance';
 import { createMarketStudies } from './market-studies.js';
 import { MARKET_OVERLAY_ID } from './market-overlays.js';
+import './market-native-indicators.js';
 import './styles.css';
 
 const status = document.querySelector('#status');
@@ -52,4 +53,3 @@ symbol.addEventListener('change', mountChart);
 timeframe.addEventListener('change', mountChart);
 document.querySelector('#reload').addEventListener('click', mountChart);
 mountChart();
-
