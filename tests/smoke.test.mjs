@@ -34,3 +34,12 @@ test('Live market studies use exchange market-data feeds', async () => {
   assert.match(studies, /createMarketStudies/);
 });
 
+test('Vela-native market structure overlay uses chart coordinates and live payloads', async () => {
+  const overlay = await readFile(new URL('../src/market-overlays.js', import.meta.url), 'utf8');
+  assert.match(overlay, /registerNativeIndicator/);
+  assert.match(overlay, /ctx\?\.pushData/);
+  assert.match(overlay, /priceToY/);
+  assert.match(overlay, /depth20/);
+  assert.match(overlay, /aggTrade/);
+});
+
