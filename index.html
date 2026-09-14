@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A Vela-powered market chart workspace." />
+    <title>Vela Market Workspace</title>
+    <style>
+      #file-warning { max-width: 720px; margin: 12vh auto; padding: 24px; display: grid; gap: 12px; border: 1px solid #806b37; border-radius: 14px; background: #17140c; color: #f7cf73; font: 16px/1.5 system-ui, sans-serif; }
+      #file-warning[hidden] { display: none; }
+      #file-warning span { color: #d8cfae; }
+      #file-warning a { color: #65e0a6; }
+    </style>
+  </head>
+  <body>
+    <noscript>This app requires JavaScript. Start it with <code>pnpm run dev</code> and open <code>http://127.0.0.1:5174/</code>.</noscript>
+    <div id="file-warning" hidden>
+      <strong>Vela is being opened as a local source file.</strong>
+      <span>Source files need Vite to resolve their modules. From this folder run <code>pnpm run dev</code>, then open <a href="http://127.0.0.1:5174/">http://127.0.0.1:5174/</a>.</span>
+      <span>After <code>pnpm run build</code>, you can open <code>dist/index.html</code> directly.</span>
+    </div>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">OPEN MARKET TERMINAL</p>
+          <h1>Vela Market Workspace</h1>
+        </div>
+        <div class="status" id="status" data-state="offline">Starting…</div>
+      </header>
+      <section class="toolbar" aria-label="Chart controls">
+        <label>Symbol <select id="symbol"><option>BTCUSDT</option><option>ETHUSDT</option><option>SOLUSDT</option></select></label>
+        <label>Timeframe <select id="timeframe"><option value="1">1m</option><option value="5">5m</option><option value="15" selected>15m</option><option value="60">1h</option><option value="240">4h</option></select></label>
+        <button id="reload" type="button">Reload chart</button>
+      </section>
+      <section id="chart" class="chart" aria-label="Interactive financial chart"></section>
+      <footer>
+        <span>Data source: Binance public market data when available.</span>
+        <a href="https://luxalgo.com/vela" target="_blank" rel="noreferrer">Vela™ by LuxAlgo</a>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      if (location.protocol === 'file:') {
+        document.querySelector('#file-warning').hidden = false;
+        document.querySelector('.shell').hidden = true;
+      }
+    </script>
+  </body>
+</html>
