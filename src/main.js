@@ -8,6 +8,7 @@ const symbol = document.querySelector('#symbol');
 const timeframe = document.querySelector('#timeframe');
 const chartRoot = document.querySelector('#chart');
 const studies = createMarketStudies({ root: document.querySelector('#studies'), getSymbol: () => symbol.value, getTimeframe: () => timeframe.value });
+const nativeCatalog = document.querySelector('[data-native-catalog]');
 let chart;
 
 function setStatus(text, state) {
@@ -33,6 +34,10 @@ async function mountChart() {
       persist: false,
     });
     await chart.ready?.();
+    const catalog = await chart.chart?.availableNativeIndicators?.();
+    if (nativeCatalog && Array.isArray(catalog)) {
+      nativeCatalog.textContent = `${catalog.length} built-in Vela studies available from the chart’s Indicators menu.`;
+    }
     setStatus('Live market data', 'online');
   } catch (error) {
     console.error(error);
