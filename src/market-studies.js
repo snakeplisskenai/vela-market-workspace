@@ -136,7 +136,7 @@ function renderHeatmap(levels) {
   return `<div class="heatmap-list">${rows.map((row) => `<div class="heatmap-row ${row.side}"><span>${Number(row.price).toPrecision(7)}</span><i style="width:${Math.max(3, (Number(row.quantity) / max) * 100)}%"></i><b>${fmt(Number(row.quantity), 3)}</b></div>`).join('')}</div>`;
 }
 
-export function createMarketStudies({ root, getSymbol, getTimeframe }) {
+export function createMarketStudies({ root, getSymbol, getTimeframe, onMarketData }) {
   const grid = root.querySelector('[data-studies-grid]');
   const controls = root.querySelectorAll('[data-study-toggle]');
   const enabled = new Set(['oi', 'cvd', 'vwap', 'heatmap', 'aggressor', 'sessions']);
@@ -176,6 +176,7 @@ export function createMarketStudies({ root, getSymbol, getTimeframe }) {
     const futuresSymbol = marketSymbol;
     const marketApi = isPerpetual ? FUTURES_API : SPOT_API;
     const marketWs = isPerpetual ? FUTURES_WS : SPOT_WS;
+    onMarketData?.({ heatmap: null, showVwap: enabled.has('vwap'), cvd: null, oi: null });
 
     if (enabled.has('oi')) {
       if (!isPerpetual) {
@@ -188,10 +189,12 @@ export function createMarketStudies({ root, getSymbol, getTimeframe }) {
           const latest = points.at(-1);
           const change = points.length > 1 ? ((latest - points[0]) / Math.abs(points[0] || 1)) * 100 : NaN;
           setCard('oi', { status: 'Live', value: `${fmt(latest)} USDT`, chart: svgSparkline(points, STUDY_META.oi.color), note: `Perpetual futures notional · ${Number.isFinite(change) ? `${change >= 0 ? '+' : ''}${change.toFixed(2)}% over ${points.length} samples` : 'history unavailable'}` });
+          onMarketData?.({ oi: latest });
         })
         .catch(() => fetchJson(`${FUTURES_API}/fapi/v1/openInterest?symbol=${futuresSymbol}`).then((row) => {
           if (currentRun !== runId) return;
           setCard('oi', { status: 'Live', value: `${fmt(Number(row.openInterest))} contracts`, chart: svgSparkline([Number(row.openInterest)], STUDY_META.oi.color), note: 'Current futures open interest; historical series unavailable for this symbol.' });
+          onMarketData?.({ oi: Number(row.openInterest) });
         }).catch((error) => setCard('oi', { status: 'Unavailable', value: '—', chart: svgSparkline([], STUDY_META.oi.color), note: error.message })));
       }
     }
@@ -205,6 +208,7 @@ export function createMarketStudies({ root, getSymbol, getTimeframe }) {
           setCard('cvd', { status: 'Live', value: `${cvd.current >= 0 ? '+' : ''}${fmt(cvd.current)} USDT`, chart: svgSparkline(cvd.points, STUDY_META.cvd.color), note: `Aggressive buyer volume minus aggressive seller volume · ${source} aggregate trades.` });
           const card = grid.querySelector('[data-study-card="cvd"]');
           if (card) card.dataset.cvdValue = String(cvd.current);
+          onMarketData?.({ cvd: cvd.current });
         })
         .catch((error) => setCard('cvd', { status: 'Unavailable', value: '—', chart: svgSparkline([], STUDY_META.cvd.color), note: error.message }));
       
@@ -217,6 +221,7 @@ export function createMarketStudies({ root, getSymbol, getTimeframe }) {
           if (!card || !Number.isFinite(delta)) return;
           const value = Number(card.dataset.cvdValue || 0) + delta;
           card.dataset.cvdValue = String(value);
+          onMarketData?.({ cvd: value });
           card.querySelector('[data-study-status]').textContent = 'Streaming';
           card.querySelector('[data-study-value]').textContent = `${value >= 0 ? '+' : ''}${fmt(value)} USDT`;
           const flowCard = grid.querySelector('[data-study-card="aggressor"]');
@@ -268,6 +273,7 @@ export function createMarketStudies({ root, getSymbol, getTimeframe }) {
         .then(({ book, source }) => {
         if (currentRun !== runId) return;
         setCard('heatmap', { status: 'Live', value: `${book.bids.length + book.asks.length} levels`, chart: renderHeatmap(book), note: `Top 20 ${source} levels by displayed quantity; not a historical order-book replay.` });
+        onMarketData?.({ heatmap: book });
       }).catch((error) => setCard('heatmap', { status: 'Unavailable', value: '—', chart: renderHeatmap(), note: error.message }));
       loadBook();
       intervals.push(window.setInterval(loadBook, 3000));
@@ -277,6 +283,7 @@ export function createMarketStudies({ root, getSymbol, getTimeframe }) {
           const payload = JSON.parse(event.data);
           const book = { bids: payload.b ?? payload.bids, asks: payload.a ?? payload.asks };
               if (book.bids && book.asks) setCard('heatmap', { status: 'Streaming', value: `${book.bids.length + book.asks.length} levels`, chart: renderHeatmap(book), note: `Streaming top-20 ${isPerpetual ? 'futures' : 'spot'} order-book levels.` });
+              if (book.bids && book.asks) onMarketData?.({ heatmap: book });
         };
         sockets.push(socket);
       } catch { /* fall back to REST polling */ }
