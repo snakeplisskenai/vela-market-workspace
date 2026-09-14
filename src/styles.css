@@ -1,0 +1,24 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #0a0d12; color: #eef2f7; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; background: radial-gradient(circle at 20% 0%, #132033 0, #0a0d12 42%); }
+#file-warning { max-width: 720px; margin: 12vh auto; padding: 24px; display: grid; gap: 12px; border: 1px solid #806b37; border-radius: 14px; background: #17140c; color: #f7cf73; line-height: 1.5; }
+#file-warning[hidden] { display: none; }
+#file-warning span { color: #d8cfae; }
+#file-warning a { color: #65e0a6; }
+.shell { max-width: 1440px; min-height: 100vh; margin: 0 auto; padding: 28px; display: grid; grid-template-rows: auto auto 1fr auto; gap: 18px; }
+.topbar, .toolbar, footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.eyebrow { margin: 0 0 6px; color: #61d8a4; font-size: 11px; letter-spacing: .16em; font-weight: 700; }
+h1 { margin: 0; font-size: clamp(24px, 4vw, 42px); letter-spacing: -.04em; }
+.status { border: 1px solid #314154; border-radius: 999px; padding: 9px 13px; color: #9eacbc; font-size: 13px; }
+.status[data-state="online"] { color: #65e0a6; border-color: #2c775b; }
+.status[data-state="loading"] { color: #f7cf73; border-color: #806b37; }
+.toolbar { justify-content: flex-start; flex-wrap: wrap; padding: 14px; border: 1px solid #1f2b3a; border-radius: 12px; background: #0e141d; }
+label { display: flex; align-items: center; gap: 8px; color: #9eacbc; font-size: 13px; }
+select, button { border: 1px solid #334255; border-radius: 8px; padding: 9px 12px; background: #121b27; color: #eef2f7; font: inherit; }
+button { cursor: pointer; background: #1b7658; border-color: #2a9c75; font-weight: 700; }
+.chart { min-height: 620px; overflow: hidden; border: 1px solid #1f2b3a; border-radius: 14px; background: #0b1119; }
+.empty { min-height: 620px; display: grid; place-content: center; gap: 8px; text-align: center; color: #9eacbc; }
+.empty strong { color: #eef2f7; }
+footer { color: #6e7b8d; font-size: 12px; }
+footer a { color: #65e0a6; }
+@media (max-width: 680px) { .shell { padding: 16px; } .topbar, footer { align-items: flex-start; flex-direction: column; } .chart, .empty { min-height: 480px; } }
