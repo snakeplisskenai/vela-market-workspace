@@ -6,6 +6,12 @@ test('Vela app has a deployable HTML entrypoint', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   assert.match(html, /Vela Market Workspace/);
   assert.match(html, /src\/main\.js/);
+  for (const symbol of ['BTCUSDT.P', 'SUIUSDT.P', 'PEPEUSDT', 'BONKUSDT']) {
+    assert.match(html, new RegExp(symbol));
+  }
+  for (const study of ['oi', 'cvd', 'vwap', 'heatmap', 'aggressor', 'sessions']) {
+    assert.match(html, new RegExp(`data-study-toggle="${study}"`));
+  }
 });
 
 test('Vela app declares the upstream chart package', async () => {
@@ -17,3 +23,14 @@ test('Vite is configured for direct local opening of the production build', asyn
   const config = await readFile(new URL('../vite.config.js', import.meta.url), 'utf8');
   assert.match(config, /base:\s*['"]\.\/['"]/);
 });
+
+test('Live market studies use exchange market-data feeds', async () => {
+  const studies = await readFile(new URL('../src/market-studies.js', import.meta.url), 'utf8');
+  assert.match(studies, /openInterestHist/);
+  assert.match(studies, /aggTrades/);
+  assert.match(studies, /depth/);
+  assert.match(studies, /aggressorRatio/);
+  assert.match(studies, /sessionSnapshot/);
+  assert.match(studies, /createMarketStudies/);
+});
+
