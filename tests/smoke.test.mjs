@@ -52,3 +52,10 @@ test('TradingView-inspired studies are registered as removable Vela natives', as
   assert.match(source, /aggTrade/);
   assert.match(source, /paneHint: 'new'/);
 });
+
+test('Chart startup does not block the shell on a slow Binance feed', async () => {
+  const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
+  assert.match(main, /READY_TIMEOUT_MS/);
+  assert.match(main, /Live studies active/);
+  assert.match(main, /Promise\.race/);
+});
